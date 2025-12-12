@@ -5,165 +5,163 @@ import java.util.Random;
 
 public class Main {
     
-    // Selection Sort: Finds min element in each iteration and swaps it to the front
-    static void selectionSort(int[] arr){
+    /* -------------------- SELECTION SORT -------------------- */
+    private static void selectionSort(int[] arr) {
         int n = arr.length;
         for (int i = 0; i < n - 1; i++) {
-            int min_idx = i;
-            
+            int minIdx = i;
             for (int j = i + 1; j < n; j++) {
-                if (arr[j] < arr[min_idx]) {
-                    min_idx = j;
+                if (arr[j] < arr[minIdx]) minIdx = j;
+            }
+            int tmp = arr[i];
+            arr[i] = arr[minIdx];
+            arr[minIdx] = tmp;
+        }
+    }
+
+    /* -------------------- INSERTION SORT -------------------- */
+    private static void insertionSort(int[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            int key = arr[i], j = i - 1;
+            while (j >= 0 && arr[j] > key) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = key;
+        }
+    }
+
+    /* -------------------- SHELL SORT -------------------- */
+    private static void shellSort(int[] arr) {
+        int n = arr.length;
+        for (int gap = n / 2; gap > 0; gap /= 2) {
+            for (int i = gap; i < n; i++) {
+                int temp = arr[i], j = i;
+                while (j >= gap && arr[j - gap] > temp) {
+                    arr[j] = arr[j - gap];
+                    j -= gap;
                 }
+                arr[j] = temp;
             }
-            int temp = arr[i];
-            arr[i] = arr[min_idx];
-            arr[min_idx] = temp;           
         }
     }
 
-    // Bubble Sort: Repeatedly swaps adjacent elements if they're in wrong order
-    static void bubbleSort(int array[]) {
-        int size = array.length;
-        for (int i = 0; i < size - 1; i++)
-            for (int j = 0; j < size - i - 1; j++)
-                if (array[j] > array[j + 1]) {
-                  int temp = array[j];
-                  array[j] = array[j + 1];
-                  array[j + 1] = temp;
+    /* -------------------- BUBBLE SORT -------------------- */
+    private static void bubbleSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++)
+            for (int j = 0; j < n - i - 1; j++)
+                if (arr[j] > arr[j + 1]) {
+                    int tmp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = tmp;
                 }
     }
 
-    // Helper function for Merge Sort: Merges two sorted subarrays
-    static void merge(int array[], int p, int q, int r) {
-        int n1 = q - p + 1;
-        int n2 = r - q;
+    /* -------------------- MERGE SORT -------------------- */
+    private static void mergeSort(int[] arr, int l, int r) {
+        if (l >= r) return;
+        int m = (l + r) / 2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+        merge(arr, l, m, r);
+    }
 
-        int L[] = new int[n1];
-        int M[] = new int[n2];
+    private static void merge(int[] arr, int l, int m, int r) {
+        int[] left = Arrays.copyOfRange(arr, l, m + 1);
+        int[] right = Arrays.copyOfRange(arr, m + 1, r + 1);
 
-        for (int i = 0; i < n1; i++)
-            L[i] = array[p + i];
-        for (int j = 0; j < n2; j++)
-            M[j] = array[q + 1 + j];
+        int i = 0, j = 0, k = l;
 
-        int i, j, k;
-        i = 0;
-        j = 0;
-        k = p;
-
-        while (i < n1 && j < n2) {
-            if (L[i] <= M[j]) {
-              array[k] = L[i];
-              i++;
-            } else {
-              array[k] = M[j];
-              j++;
-            }
-            k++;
+        while (i < left.length && j < right.length) {
+            arr[k++] = (left[i] <= right[j]) ? left[i++] : right[j++];
         }
+        while (i < left.length) arr[k++] = left[i++];
+        while (j < right.length) arr[k++] = right[j++];
+    }
 
-        while (i < n1) {
-            array[k] = L[i];
-            i++;
-            k++;
-        }
+    /* -------------------- QUICK SORT (RANDOM PIVOT) -------------------- */
+    private static final Random RAND = new Random();
 
-        while (j < n2) {
-            array[k] = M[j];
-            j++;
-            k++;
+    private static void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pivotIndex = randomPartition(arr, low, high);
+            quickSort(arr, low, pivotIndex - 1);
+            quickSort(arr, pivotIndex + 1, high);
         }
     }
 
-    // Merge Sort: Divide and conquer algorithm with O(n log n) complexity
-    static void mergeSort(int array[], int left, int right) {
-        if (left < right) {
-            int mid = (left + right) / 2;
-            mergeSort(array, left, mid);
-            mergeSort(array, mid + 1, right);
-            merge(array, left, mid, right);
-        }
+    private static int randomPartition(int[] arr, int low, int high) {
+        int randomIndex = low + RAND.nextInt(high - low + 1);
+        swap(arr, randomIndex, high);
+        return partition(arr, low, high);
     }
 
-    // Helper function for Quick Sort: Partitions the array
-    static int partition(int[] arr, int low, int high) {
-        int pivot = arr[high];
-        int i = low - 1;
-
-        for (int j = low; j <= high - 1; j++) {
-            if (arr[j] < pivot) {
-                i++;
-                swap(arr, i, j);
-            }
+    private static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high], i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (arr[j] < pivot) swap(arr, ++i, j);
         }
-        swap(arr, i + 1, high);  
+        swap(arr, i + 1, high);
         return i + 1;
     }
-    
-    // Swaps two elements in an array
-    static void swap(int[] arr, int i, int j) {
-        int temp = arr[i];
+
+    private static void swap(int[] arr, int i, int j) {
+        int tmp = arr[i];
         arr[i] = arr[j];
-        arr[j] = temp;
+        arr[j] = tmp;
     }
 
-    // Quick Sort: Efficient divide and conquer with pivot selection
-    static void quickSort(int[] arr, int low, int high) {
-        if (low < high) {
-            int pi = partition(arr, low, high);
-            quickSort(arr, low, pi - 1);
-            quickSort(arr, pi + 1, high);
+    /* -------------------- RADIX SORT -------------------- */
+    private static void radixSort(int[] arr) {
+        int max = Arrays.stream(arr).max().orElse(0);
+        for (int exp = 1; max / exp > 0; exp *= 10)
+            countingSort(arr, exp);
+    }
+
+    private static void countingSort(int[] arr, int exp) {
+        int n = arr.length;
+        int[] output = new int[n];
+        int[] count = new int[10];
+
+        for (int value : arr) count[(value / exp) % 10]++;
+        for (int i = 1; i < 10; i++) count[i] += count[i - 1];
+
+        for (int i = n - 1; i >= 0; i--) {
+            int digit = (arr[i] / exp) % 10;
+            output[--count[digit]] = arr[i];
         }
+
+        System.arraycopy(output, 0, arr, 0, n);
     }
-    
+
+    /* -------------------- TIME MEASURE -------------------- */
+    private static long measure(Runnable sort) {
+        long start = System.nanoTime();
+        sort.run();
+        return (System.nanoTime() - start) / 1_000_000;
+    }
+
     public static void main(String[] args) {
-        int[] arr = new int[10000];
+
         Random rd = new Random();
+        int size = 10000;
 
-        for (int j = 0; j < 4; j++) {
-            // Fill array with random numbers
-            for (int i = 0; i < arr.length; i++) {
-                arr[i] = rd.nextInt(10000);
-            }
+        for (int round = 1; round <= 4; round++) {
 
-            // Create copies for each sorting algorithm
-            int[] arr1 = Arrays.copyOf(arr, arr.length);
-            int[] arr2 = Arrays.copyOf(arr, arr.length);
-            int[] arr3 = Arrays.copyOf(arr, arr.length);
-            int[] arr4 = Arrays.copyOf(arr, arr.length);
+            int[] base = rd.ints(size, 0, 10000).toArray();
 
-            long startTime, endTime, executionTime;
+            System.out.println("----- Round " + round + " -----");
 
-            // Benchmark Selection Sort
-            startTime = System.nanoTime();
-            selectionSort(arr1);
-            endTime = System.nanoTime();
-            executionTime = (endTime - startTime) / 1000000;
-            System.out.println("Selection sort: " + executionTime + "ms");
+            System.out.printf("%-15s %d ms%n", "Selection Sort", measure(() -> selectionSort(Arrays.copyOf(base, size))));
+            System.out.printf("%-15s %d ms%n", "Insertion Sort", measure(() -> insertionSort(Arrays.copyOf(base, size))));
+            System.out.printf("%-15s %d ms%n", "Shell Sort",     measure(() -> shellSort(Arrays.copyOf(base, size))));
+            System.out.printf("%-15s %d ms%n", "Bubble Sort",    measure(() -> bubbleSort(Arrays.copyOf(base, size))));
+            System.out.printf("%-15s %d ms%n", "Merge Sort",     measure(() -> mergeSort(Arrays.copyOf(base, size), 0, size - 1)));
+            System.out.printf("%-15s %d ms%n", "Quick Sort",     measure(() -> quickSort(Arrays.copyOf(base, size), 0, size - 1)));
+            System.out.printf("%-15s %d ms%n", "Radix Sort",     measure(() -> radixSort(Arrays.copyOf(base, size))));
 
-            // Benchmark Bubble Sort
-            startTime = System.nanoTime();
-            bubbleSort(arr2);
-            endTime = System.nanoTime();
-            executionTime = (endTime - startTime) / 1000000;
-            System.out.println("Bubble sort: " + executionTime + "ms");
-
-            // Benchmark Merge Sort
-            startTime = System.nanoTime();
-            mergeSort(arr3, 0, arr3.length - 1);
-            endTime = System.nanoTime();
-            executionTime = (endTime - startTime) / 1000000;
-            System.out.println("Merge sort: " + executionTime + "ms");
-
-            // Benchmark Quick Sort
-            startTime = System.nanoTime();
-            quickSort(arr4, 0, arr4.length - 1);
-            endTime = System.nanoTime();
-            executionTime = (endTime - startTime) / 1000000;
-            System.out.println("Quick sort: " + executionTime + "ms");
-
-            System.out.println("-----------------------------------");
+            System.out.println("-----------------------------------\n");
         }
     }
 }
