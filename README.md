@@ -1,16 +1,33 @@
-# Sorting Algorithms Benchmark in Java 🚀
+📊 Sorting Algorithms Benchmark in Java
 
-This project compares the performance of four classic sorting algorithms in Java: 
-**Selection Sort**, **Bubble Sort**, **Merge Sort**, and **Quick Sort**. 
-It generates random arrays and measures execution times for each algorithm.
+This project benchmarks various sorting algorithms in Java by measuring their execution time on randomly generated arrays.
+Each algorithm is tested across 4 rounds, using the same input data for fair comparison.
 
-## 📊 Algorithms Overview
-| Algorithm       | Time Complexity (Avg) | Space Complexity | Notes                     |
-|-----------------|-----------------------|------------------|---------------------------|
-| Selection Sort  | O(n²)                 | O(1)             | In-place, unstable        |
-| Bubble Sort     | O(n²)                 | O(1)             | Simple but inefficient   |
-| Merge Sort      | O(n log n)            | O(n)             | Stable, divide & conquer  |
-| Quick Sort      | O(n log n)            | O(log n)         | Fastest in practice       |
+
+
+🚀 Purpose
+
+The goal of this project is to compare the real-time performance of popular sorting algorithms,
+observe how they behave under identical conditions, and better understand their underlying mechanics.
+
+
+
+| Algorithm      | Best Case  | Average Case | Worst Case | Space    | Stable | Notes                           |
+| -------------- | ---------- | ------------ | ---------- | -------- | ------ | ------------------------------- |
+| Selection Sort | O(n²)      | O(n²)        | O(n²)      | O(1)     | ❌      | Simple but slow                 |
+| Insertion Sort | O(n)       | O(n²)        | O(n²)      | O(1)     | ✔️     | Very fast on nearly sorted data |
+| Shell Sort     | O(n log n) | O(n^(3/2))   | O(n²)      | O(1)     | ❌      | Improved insertion sort         |
+| Bubble Sort    | O(n)       | O(n²)        | O(n²)      | O(1)     | ✔️     | Slowest algorithm               |
+| Merge Sort     | O(n log n) | O(n log n)   | O(n log n) | O(n)     | ✔️     | Divide & conquer                |
+| Quick Sort     | O(n log n) | O(n log n)   | O(n²)      | O(log n) | ❌      | Fastest in practice             |
+| Radix Sort     | O(nk)      | O(nk)        | O(nk)      | O(n + k) | ✔️     | Excellent for integers          |
+
+
+
+
+<img width="1536" height="1024" alt="ChatGPT Image 12 Ara 2025 22_08_06" src="https://github.com/user-attachments/assets/a682a9e3-f549-4792-8b88-d201dd8617d3" />
+
+
 
 ## 🛠️ Setup & Run
 1. **Requirements**:
